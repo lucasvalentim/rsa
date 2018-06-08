@@ -1,4 +1,4 @@
-from secrets import randbelow
+from secrets import randbits, randbelow
 from math import gcd
 
 def primo(num):
@@ -7,10 +7,14 @@ def primo(num):
 
     if num < 2 or num % 2 == 0:
         return False
+    
+    n = 3
 
-    for n in range(3, num, 2):
+    while n <= num ** 0.5:
         if num % n == 0:
             return False
+        
+        n += 2
 
     return True
 
@@ -52,15 +56,15 @@ class RSA(object):
     def chave_privada(self):
         return self.p, self.q, self.d    
     
-    def gerar_primos(self, limite):
-        self.p = randbelow(limite)
-        self.q = randbelow(limite)
+    def gerar_primos(self, bits):
+        self.p = randbits(bits)
+        self.q = randbits(bits)
         
         while not primo(self.p):
-            self.p = randbelow(limite)
+            self.p = randbits(bits)
         
         while self.p == self.q or not primo(self.q):
-            self.q = randbelow(limite)
+            self.q = randbits(bits)
         
     def calcular_n(self):
         self.n = self.p * self.q
@@ -77,8 +81,8 @@ class RSA(object):
     def calcular_d(self):
         self.d = modinv(self.e, self.phi)
     
-    def gerar_chaves(self, limite=10**7):
-        self.gerar_primos(limite)
+    def gerar_chaves(self, bits=32):
+        self.gerar_primos(bits)
         self.calcular_n()
         self.calcular_phi()
         self.gerar_e()
