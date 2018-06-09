@@ -2,20 +2,23 @@ from secrets import randbits, randbelow
 from math import gcd
 
 def primo(num):
-    if num == 2:
-        return True
-
-    if num < 2 or num % 2 == 0:
+    if num <= 1:
         return False
     
-    n = 3
+    elif num <= 3:
+        return True
 
-    while n <= num ** 0.5:
-        if num % n == 0:
+    elif num % 2 == 0 or num % 3 == 0:
+        return False
+    
+    i = 5
+    
+    while i**2 <= num:
+        if num % i == 0 or num % (i + 2) == 0:
             return False
         
-        n += 2
-
+        i += 6
+        
     return True
 
 def egcd(a, b):
@@ -81,8 +84,8 @@ class RSA(object):
     def calcular_d(self):
         self.d = modinv(self.e, self.phi)
     
-    def gerar_chaves(self, bits=32):
-        self.gerar_primos(bits)
+    def gerar_chaves(self, bits=64):
+        self.gerar_primos(int(bits / 2))
         self.calcular_n()
         self.calcular_phi()
         self.gerar_e()
