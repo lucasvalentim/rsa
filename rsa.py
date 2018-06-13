@@ -37,18 +37,6 @@ def modinv(a, m):
 
     return x % m
 
-def pow_mod(x, y, z):
-    num = 1
-
-    while y:
-        if y & 1:
-            num = num * x % z
-
-        y >>= 1            
-        x = x * x % z
-
-    return num
-
 
 class RSA(object):    
     @property
@@ -96,7 +84,7 @@ class RSA(object):
         n, e = chave_publica
         
         mensagem_ascii = [ord(caractere) for caractere in mensagem]
-        mensagem_encriptada = [str(pow_mod(caractere_ascii, e, n)) for caractere_ascii in mensagem_ascii]
+        mensagem_encriptada = [str(pow(caractere_ascii, e, n)) for caractere_ascii in mensagem_ascii]
         
         return ' '.join(mensagem_encriptada)
     
@@ -105,7 +93,7 @@ class RSA(object):
         p, q, d = chave_privada
 
         mensagem_encriptada = mensagem_encriptada.split(' ')
-        mensagem_ascii = [pow_mod(int(caractere_encriptado), d, p * q) for caractere_encriptado in mensagem_encriptada]
+        mensagem_ascii = [pow(int(caractere_encriptado), d, p * q) for caractere_encriptado in mensagem_encriptada]
         mensagem = [chr(caractere_ascii) for caractere_ascii in mensagem_ascii]
         
         return ''.join(mensagem)
